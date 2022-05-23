@@ -1,0 +1,10 @@
+services:
+  ci:
+    # image: plone/volto-addon-ci
+    build:
+      context: .
+      dockerfile: ci.Dockerfile
+    # volumes:
+    #   - ./:/opt/frontend/my-volto-project/src/addons/volto-middleware-rejectanonymous
+    environment:
+      - GIT_NAME=volto-middleware-rejectanonymous
