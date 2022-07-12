@@ -1,18 +1,28 @@
 import jwtDecode from 'jwt-decode';
 
 const applyConfig = (config) => {
+  const { prefixPath } = config.settings;
+
+  const loginUrl = prefixPath ? `${prefixPath}/login` : '/login';
+  const excludeUrls = prefixPath
+    ? `^\\/static|^\\${prefixPath}\\/login`
+    : '^/static|^/login';
+
   const defaults = {
     rejectanonymousSettings: {
       userHeaderName: 'REMOTE_USER',
-      loginUrl: '/login',
-      excludeUrls: /^\/static|^\/login/,
+      loginUrl,
+      excludeUrls: new RegExp(excludeUrls),
     },
   };
   config.settings = {
     ...config.settings,
     ...defaults,
   };
-  if (__SERVER__) {
+
+  const enabled = process.env.RAZZLE_REJECT_ANONYMOUS || false;
+
+  if (__SERVER__ && enabled) {
     const express = require('express');
     const middleware = express.Router();
     const settings = config.settings.rejectanonymousSettings;
@@ -23,6 +33,10 @@ const applyConfig = (config) => {
         // TODO: anzichè redirect potrebbe essere settato un nuovo cookie di
         // autenticazione con un token valido per l'utente
         if (!token) {
+          console.log(
+            'mando qui: ',
+            `${settings.loginUrl}?came_from=${req.url}`,
+          );
           return res.redirect(`${settings.loginUrl}?came_from=${req.url}`);
         }
         if (token && settings?.userHeaderName) {
