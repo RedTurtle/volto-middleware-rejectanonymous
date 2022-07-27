@@ -2,11 +2,16 @@ import jwtDecode from 'jwt-decode';
 
 const applyConfig = (config) => {
   const { prefixPath } = config.settings;
+  const redirectUrl =
+    process.env.RAZZLE_REJECT_ANONYMOUS_REDIRECT_URL || '/login';
+  const enabled = process.env.RAZZLE_REJECT_ANONYMOUS || false;
 
-  const loginUrl = prefixPath ? `${prefixPath}/login` : '/login';
+  const loginUrl = prefixPath
+    ? `${prefixPath}${redirectUrl}`
+    : `/${redirectUrl}`;
   const excludeUrls = prefixPath
-    ? `^\\/static|^\\${prefixPath}\\/login`
-    : '^/static|^/login';
+    ? `^\\/static|^\\${prefixPath}\\${redirectUrl}`
+    : `^\\/static|^\\${redirectUrl}`;
 
   const defaults = {
     rejectanonymousSettings: {
@@ -20,8 +25,6 @@ const applyConfig = (config) => {
     ...defaults,
   };
 
-  const enabled = process.env.RAZZLE_REJECT_ANONYMOUS || false;
-
   if (__SERVER__ && enabled) {
     const express = require('express');
     const middleware = express.Router();
@@ -33,10 +36,6 @@ const applyConfig = (config) => {
         // TODO: anzichè redirect potrebbe essere settato un nuovo cookie di
         // autenticazione con un token valido per l'utente
         if (!token) {
-          console.log(
-            'mando qui: ',
-            `${settings.loginUrl}?came_from=${req.url}`,
-          );
           return res.redirect(`${settings.loginUrl}?came_from=${req.url}`);
         }
         if (token && settings?.userHeaderName) {
