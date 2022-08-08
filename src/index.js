@@ -1,18 +1,31 @@
 import jwtDecode from 'jwt-decode';
 
 const applyConfig = (config) => {
+  const { prefixPath } = config.settings;
+  const redirectUrl =
+    process.env.RAZZLE_REJECT_ANONYMOUS_REDIRECT_URL || '/login';
+  const enabled = process.env.RAZZLE_REJECT_ANONYMOUS || false;
+
+  const loginUrl = prefixPath
+    ? `${prefixPath}${redirectUrl}`
+    : `/${redirectUrl}`;
+  const excludeUrls = prefixPath
+    ? `^\\/static|^\\${prefixPath}\\${redirectUrl}`
+    : `^\\/static|^\\${redirectUrl}`;
+
   const defaults = {
     rejectanonymousSettings: {
       userHeaderName: 'REMOTE_USER',
-      loginUrl: '/login',
-      excludeUrls: /^\/static|^\/login/,
+      loginUrl,
+      excludeUrls: new RegExp(excludeUrls),
     },
   };
   config.settings = {
     ...config.settings,
     ...defaults,
   };
-  if (__SERVER__) {
+
+  if (__SERVER__ && enabled) {
     const express = require('express');
     const middleware = express.Router();
     const settings = config.settings.rejectanonymousSettings;
