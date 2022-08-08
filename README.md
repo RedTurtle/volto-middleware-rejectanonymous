@@ -46,7 +46,7 @@ With this middleware, you can force SSR to make a fake call to a Plone view that
    ],
 
    "dependencies": {
-       "volto-middleware-rejectanonymous": "^1.0.0"
+       "volto-middleware-rejectanonymous": "^0.1.0"
    }
    ```
 
@@ -74,10 +74,6 @@ With this middleware, you can force SSR to make a fake call to a Plone view that
 This add-on can be enabled with an environment variable `RAZZLE_REJECT_ANONYMOUS`. It is disabled by default.
 
 Default redirect url is `/login` but you can override it with `RAZZLE_REJECT_ANONYMOUS_REDIRECT_URL` environment variable.
-
-## Release
-
-See [RELEASE.md](https://github.com/RedTurtle/volto-middleware-rejectanonymous/blob/master/RELEASE.md).
 
 ## How to contribute
 
