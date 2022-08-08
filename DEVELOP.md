@@ -17,7 +17,7 @@ Before starting make sure your development environment is properly set. See [Vol
 
         {
             "volto-addon-template": {
-                "url": "https://github.com/collective/volto-middleware-rejectanonymous.git",
+                "url": "https://github.com/RedTurtle/volto-middleware-rejectanonymous.git",
                 "package": "volto-middleware-rejectanonymous",
                 "branch": "main",
                 "path": "src"

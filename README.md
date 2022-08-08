@@ -1,16 +1,16 @@
 # volto-middleware-rejectanonymous
 
-[Volto](https://github.com/plone/volto) add-on
+[Volto](https://github.com/plone/volto) add-on that reject unconditionnally anonymous users from a Volto site.
 
-## Features
+They should be redirected to a login form (customizable).
 
-[rejectanonymous](https://rejectanonymousjs.github.io/) middleware
+When login management is outside Plone, the first SSR page load is without login headers, so you have to refresh the page to have the proper tokens.
 
-Demo GIF
+With this middleware, you can force SSR to make a fake call to a Plone view that simply make a redirect (and returns the auth tokens).
 
 ## Getting started
 
-### Try volto-addon-template with Docker
+### Try volto-middleware-rejectanonymous with Docker
 
 1. Get the latest Docker images
 
@@ -32,7 +32,7 @@ Demo GIF
 
 1. Go to http://localhost:3000
 
-### Add volto-addon-template to your Volto project
+### Add volto-middleware-rejectanonymous to your Volto project
 
 1. Make sure you have a [Plone backend](https://plone.org/download) up-and-running at http://localhost:8080/Plone
 
@@ -69,14 +69,20 @@ Demo GIF
 
 1. Happy editing!
 
+### Configuration
+
+This add-on can be enabled with an environment variable `RAZZLE_REJECT_ANONYMOUS`. It is disabled by default.
+
+Default redirect url is `/login` but you can override it with `RAZZLE_REJECT_ANONYMOUS_REDIRECT_URL` environment variable.
+
 ## Release
 
-See [RELEASE.md](https://github.com/collcetive/volto-middleware-rejectanonymous/blob/master/RELEASE.md).
+See [RELEASE.md](https://github.com/RedTurtle/volto-middleware-rejectanonymous/blob/master/RELEASE.md).
 
 ## How to contribute
 
-See [DEVELOP.md](https://github.com/collcetive/volto-middleware-rejectanonymous/blob/master/DEVELOP.md).
+See [DEVELOP.md](https://github.com/RedTurtle/volto-middleware-rejectanonymous/blob/master/DEVELOP.md).
 
 ## Copyright and license
 
-See [LICENSE.md](https://github.com/collcetive/volto-middleware-rejectanonymous/blob/master/LICENSE.md) for details.
+See [LICENSE.md](https://github.com/RedTurtle/volto-middleware-rejectanonymous/blob/master/LICENSE.md) for details.
