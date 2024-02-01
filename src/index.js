@@ -40,9 +40,15 @@ const applyConfig = (config) => {
         }
         if (token && settings?.userHeaderName) {
           const user = req.get(settings.userHeaderName);
-          if (user && jwtDecode(token).sub !== user) {
+          // require auth if:
+          // - header user is different from token user
+          // - token has no expiration
+          // - token is expired
+          if (jwtDecode(token).sub !== user || !jwtDecode(token).exp || jwtDecode(token).exp < Date.now() / 1000){
+            // TODO: eventually add base_url to a relative settings.loginUrl
             return res.redirect(`${settings.loginUrl}?came_from=${req.url}`);
           }
+
         }
       }
       return next();
