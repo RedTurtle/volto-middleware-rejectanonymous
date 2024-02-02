@@ -45,7 +45,10 @@ const applyConfig = (config) => {
           // - token has no expiration
           // - token is expired
           console.log(jwtDecode(token));
-          console.log("espressione: ", (jwtDecode(token).sub !== user || !jwtDecode(token).exp || jwtDecode(token).exp < Date.now() / 1000));
+          console.log("jwtDecode(token).sub !== user => ", jwtDecode(token).sub !== user);
+          console.log("!jwtDecode(token).exp => ", !jwtDecode(token).exp);
+          console.log("jwtDecode(token).exp < Date.now() / 1000) => ", jwtDecode(token).exp < Date.now() / 1000))
+          console.log("espressione finale: ", (jwtDecode(token).sub !== user || !jwtDecode(token).exp || jwtDecode(token).exp < Date.now() / 1000));
           if (user && jwtDecode(token).sub !== user) {
             return res.redirect(`${settings.loginUrl}?came_from=${req.url}`);
           }
