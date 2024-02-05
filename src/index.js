@@ -31,6 +31,7 @@ const applyConfig = (config) => {
     const settings = config.settings.rejectanonymousSettings;
     middleware.id = 'rejectanonymous-middleware';
     middleware.all('*', (req, res, next) => {
+      console.log(req);
       if (!req.url.match(settings.excludeUrls)) {
         const token = req.universalCookies.get('auth_token');
         // TODO: anzichè redirect potrebbe essere settato un nuovo cookie di
