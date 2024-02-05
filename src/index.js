@@ -6,12 +6,19 @@ const applyConfig = (config) => {
     process.env.RAZZLE_REJECT_ANONYMOUS_REDIRECT_URL || '/login';
   const enabled = process.env.RAZZLE_REJECT_ANONYMOUS || false;
 
-  const loginUrl = prefixPath
-    ? `${prefixPath}${redirectUrl}`
-    : `/${redirectUrl}`;
-  const excludeUrls = prefixPath
-    ? `^\\/static|^\\${prefixPath}\\${redirectUrl}`
-    : `^\\/static|^\\${redirectUrl}`;
+  if (redirectUrl.startsWith("http")) {
+    // temp hack for LBL problems
+    const loginUrl = redirectUrl;
+    const excludeUrls = '';
+  } else {
+    const loginUrl = prefixPath
+      ? `${prefixPath}${redirectUrl}`
+      : `/${redirectUrl}`;
+    const excludeUrls = prefixPath
+      ? `^\\/static|^\\${prefixPath}\\${redirectUrl}`
+      : `^\\/static|^\\${redirectUrl}`;
+  }
+  
 
   const defaults = {
     rejectanonymousSettings: {
@@ -31,7 +38,6 @@ const applyConfig = (config) => {
     const settings = config.settings.rejectanonymousSettings;
     middleware.id = 'rejectanonymous-middleware';
     middleware.all('*', (req, res, next) => {
-      console.log(req);
       if (!req.url.match(settings.excludeUrls)) {
         const token = req.universalCookies.get('auth_token');
         // TODO: anzichè redirect potrebbe essere settato un nuovo cookie di
