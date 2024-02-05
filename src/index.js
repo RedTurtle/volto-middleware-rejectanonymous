@@ -5,16 +5,18 @@ const applyConfig = (config) => {
   const redirectUrl =
     process.env.RAZZLE_REJECT_ANONYMOUS_REDIRECT_URL || '/login';
   const enabled = process.env.RAZZLE_REJECT_ANONYMOUS || false;
+  
+  let loginUrl = "";
+  let excludeUrls = "";
 
   if (redirectUrl.startsWith("http")) {
     // temp hack for LBL problems
-    const loginUrl = redirectUrl;
-    const excludeUrls = '';
+    loginUrl = redirectUrl;
   } else {
-    const loginUrl = prefixPath
+    loginUrl = prefixPath
       ? `${prefixPath}${redirectUrl}`
       : `/${redirectUrl}`;
-    const excludeUrls = prefixPath
+    excludeUrls = prefixPath
       ? `^\\/static|^\\${prefixPath}\\${redirectUrl}`
       : `^\\/static|^\\${redirectUrl}`;
   }
