@@ -1,6 +1,6 @@
 {
   "name": "volto-middleware-rejectanonymous",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "volto-middleware-rejectanonymous: Volto add-on for add security with HTTP headers ",
   "main": "src/index.js",
   "author": "Mauro Amico",
