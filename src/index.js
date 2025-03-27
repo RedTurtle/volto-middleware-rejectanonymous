@@ -44,15 +44,14 @@ const applyConfig = (config) => {
           // - header user is different from token user
           // - token has no expiration
           // - token is expired
-          console.log("USER: ", user);
-          console.log("TOKEN: ", jwtDecode(token));
-          console.log("TOKEN SCADUTO: ", jwtDecode(token).exp < Date.now() / 1000);
-          console.log("CONDIZIONE: ", ((user && jwtDecode(token).sub !== user) || !jwtDecode(token).exp || jwtDecode(token).exp < Date.now() / 1000));
-          if ((user && jwtDecode(token).sub !== user) || !jwtDecode(token).exp || jwtDecode(token).exp < Date.now() / 1000){
+          if (
+            (user && jwtDecode(token).sub !== user) ||
+            !jwtDecode(token).exp ||
+            jwtDecode(token).exp < Date.now() / 1000
+          ) {
             // TODO: eventually add base_url to a relative settings.loginUrl
             return res.redirect(`${settings.loginUrl}?came_from=${req.url}`);
           }
-
         }
       }
       return next();
