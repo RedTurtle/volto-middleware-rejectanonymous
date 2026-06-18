@@ -67,7 +67,7 @@ const applyConfig = (config) => {
         // TODO: anzichè redirect potrebbe essere settato un nuovo cookie di
         // autenticazione con un token valido per l'utente
         if (!token) {
-          return res.redirect(`${prefixedLoginUrl}?came_from=${req.url}`);
+          return res.redirect(`${prefixedLoginUrl}${prefixedLoginUrl.includes('?') ? '&' : '?'}came_from=${encodeURIComponent(req.originalUrl || req.url)}`);
         }
         if (token && settings?.userHeaderName) {
           const user = req.get(settings.userHeaderName);
@@ -81,7 +81,7 @@ const applyConfig = (config) => {
             jwtDecode(token).exp < Date.now() / 1000
           ) {
             // TODO: eventually add base_url to a relative settings.loginUrl
-            return res.redirect(`${prefixedLoginUrl}?came_from=${req.url}`);
+            return res.redirect(`${prefixedLoginUrl}${prefixedLoginUrl.includes('?') ? '&' : '?'}came_from=${encodeURIComponent(req.originalUrl || req.url)}`);
           }
         }
       }
