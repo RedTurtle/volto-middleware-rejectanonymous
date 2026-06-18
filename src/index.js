@@ -1,5 +1,7 @@
 import jwtDecode from 'jwt-decode';
 
+const escapeRegExp = (str) => str.replace(/[.*+?^${}()|[\]\\-]/g, '\\$&');
+
 const applyConfig = (config) => {
   const redirectUrl =
     process.env.RAZZLE_REJECT_ANONYMOUS_REDIRECT_URL || '/login';
@@ -39,15 +41,26 @@ const applyConfig = (config) => {
       const settings = config.settings.rejectanonymousSettings;
       const { loginUrl, logoutUrl, excludeUrls } = settings;
 
-      const prefixedLoginUrl = prefix
-        ? `${prefix}${loginUrl}`
+      // Normalize prefix: strip trailing slash(es) to avoid double slashes
+      let normalizedPrefix = prefix || '';
+      while (normalizedPrefix.endsWith('/')) {
+        normalizedPrefix = normalizedPrefix.slice(0, -1);
+      }
+
+      const prefixedLoginUrl = normalizedPrefix
+        ? `${normalizedPrefix}${loginUrl}`
         : loginUrl;
 
-      const defaultExcludeUrls = prefix
-        ? `^\\/static|^\\${prefix}\\${loginUrl}|^\\${prefix}\\${logoutUrl}`
-        : `^\\/static|^\\${loginUrl}|^\\${logoutUrl}`;
+      const prefixedLogoutUrl = normalizedPrefix
+        ? `${normalizedPrefix}${logoutUrl}`
+        : logoutUrl;
 
-      const regExp = excludeUrls || new RegExp(defaultExcludeUrls);
+      const defaultExcludeUrls = `^\\/static|^${escapeRegExp(prefixedLoginUrl)}|^${escapeRegExp(prefixedLogoutUrl)}`;
+
+      const regExp =
+        excludeUrls instanceof RegExp
+          ? excludeUrls
+          : new RegExp(excludeUrls || defaultExcludeUrls);
 
       if (!req.url.match(regExp)) {
         const token = req.universalCookies.get('auth_token');
