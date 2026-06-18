@@ -15,7 +15,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git@github.com:RedTurtle/volto-middleware-rejectanonymous.git"
+    "url": "git+ssh://git@github.com/RedTurtle/volto-middleware-rejectanonymous.git"
   },
   "dependencies": {
     "@plone/scripts": "*"
